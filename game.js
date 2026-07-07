@@ -231,3 +231,163 @@ function update(){
     distance+=0.5;
 
 }
+
+//------------------------------------------------------
+// Draw Stars
+//------------------------------------------------------
+
+function drawStars(){
+
+    stars.forEach(s=>{
+
+        ctx.beginPath();
+
+        ctx.fillStyle="white";
+
+        ctx.arc(s.x,s.y,s.z,0,6.28);
+
+        ctx.fill();
+
+    });
+
+}
+
+
+//------------------------------------------------------
+// Draw Ship
+//------------------------------------------------------
+
+function drawPlayer(){
+
+    ctx.save();
+
+    ctx.translate(player.x,player.y);
+
+    // Engine glow
+    ctx.shadowColor="#00FFFF";
+    ctx.shadowBlur=20;
+
+    ctx.fillStyle="#66DDFF";
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,-35);
+
+    ctx.lineTo(18,25);
+
+    ctx.lineTo(0,12);
+
+    ctx.lineTo(-18,25);
+
+    ctx.closePath();
+
+    ctx.fill();
+
+    // Cockpit
+    ctx.shadowBlur=0;
+
+    ctx.fillStyle="white";
+
+    ctx.beginPath();
+
+    ctx.arc(0,-5,6,0,6.28);
+
+    ctx.fill();
+
+    ctx.restore();
+
+}
+
+
+//------------------------------------------------------
+// Draw Asteroids
+//------------------------------------------------------
+
+function drawAsteroids(){
+
+    asteroids.forEach(a=>{
+
+        ctx.save();
+
+        ctx.translate(a.x,a.y);
+
+        ctx.rotate(a.rotation);
+
+        ctx.fillStyle="#777";
+
+        ctx.beginPath();
+
+        for(let i=0;i<8;i++){
+
+            const angle=i*Math.PI/4;
+
+            const r=a.radius+(Math.random()*6-3);
+
+            const x=Math.cos(angle)*r;
+            const y=Math.sin(angle)*r;
+
+            if(i===0)
+                ctx.moveTo(x,y);
+            else
+                ctx.lineTo(x,y);
+
+        }
+
+        ctx.closePath();
+
+        ctx.fill();
+
+        ctx.restore();
+
+    });
+
+}
+
+
+//------------------------------------------------------
+// HUD
+//------------------------------------------------------
+
+function drawHUD(){
+
+    ctx.fillStyle="white";
+
+    ctx.font="22px Arial";
+
+    ctx.fillText(
+        "Distance : "+Math.floor(distance)+" m",
+        20,
+        40
+    );
+
+    ctx.fillText(
+        "Best : "+best+" m",
+        canvas.width-180,
+        40
+    );
+
+}
+
+//------------------------------------------------------
+// Game Loop
+//------------------------------------------------------
+
+function loop(){
+
+    update();
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    drawStars();
+
+    drawAsteroids();
+
+    drawPlayer();
+
+    drawHUD();
+
+    requestAnimationFrame(loop);
+
+}
+
+loop();
